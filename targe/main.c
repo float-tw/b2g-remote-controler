@@ -11,7 +11,7 @@ int main()
 	int ret;
 	int i;
 	struct uinput_user_dev uidev;
-	struct input_event ev[5];
+	struct input_event ev[7];
 
 	fd = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
 	if( fd  < 0 )
@@ -23,8 +23,6 @@ int main()
 	// creating an input device
 	
 	ret = ioctl(fd, UI_SET_EVBIT, EV_ABS);
-	ret = ioctl(fd, UI_SET_ABSBIT, ABS_X);
-	ret = ioctl(fd, UI_SET_ABSBIT, ABS_Y);
 
 	ret = ioctl(fd, UI_SET_ABSBIT, ABS_MT_POSITION_X);
 	ret = ioctl(fd, UI_SET_ABSBIT, ABS_MT_POSITION_Y);
@@ -32,16 +30,7 @@ int main()
 	ret = ioctl(fd, UI_SET_ABSBIT, ABS_MT_TOUCH_MAJOR);
 	ret = ioctl(fd, UI_SET_ABSBIT, ABS_MT_TRACKING_ID);
 
-	//ret = ioctl(fd, UI_SET_EVBIT, EV_REL);
-	//ret = ioctl(fd, UI_SET_RELBIT, REL_X);
-	//ret = ioctl(fd, UI_SET_RELBIT, REL_Y);
-
 	ret = ioctl(fd, UI_SET_EVBIT, EV_KEY);
-	//ret = ioctl(fd, UI_SET_KEYBIT, BTN_TOUCH);
-	//printf("%d\n", ret);
-	//ret = ioctl(fd, UI_SET_KEYBIT, BTN_MOUSE);
-	//ret = ioctl(fd, UI_SET_KEYBIT, BTN_LEFT);
-	//ret = ioctl(fd, UI_SET_KEYBIT, KEY_LEFT);
 
 	memset(&uidev, 0, sizeof(uidev));
 
@@ -51,59 +40,48 @@ int main()
 	uidev.id.product = 0xfedc;
 	uidev.id.version = 1;
 	uidev.absmin[ABS_X] = 0;
-	uidev.absmax[ABS_X] = 480;
+	uidev.absmax[ABS_X] = 1024;
 	uidev.absmin[ABS_Y] = 0;
-	uidev.absmax[ABS_Y] = 800;
-	//uidev.absmin[REL_X] = 0;
-	//uidev.absmax[REL_X] = 65535;
-	//uidev.absmin[REL_Y] = 0;
-	//uidev.absmax[REL_Y] = 65535;
+	uidev.absmax[ABS_Y] = 1024;
 
 	ret = write(fd, &uidev, sizeof(uidev));
 	ret = ioctl(fd, UI_DEV_CREATE);
 
 	//scanf("%d", &ret);
-	sleep(1);
+	sleep(10);
 
 	memset(ev, 0, sizeof(ev));
 
 	ev[0].type = EV_ABS;
-	ev[0].code = ABS_X;
-	ev[0].value = 240;
+	ev[0].code = ABS_MT_POSITION_X;
+	ev[0].value = 512;
 	ev[1].type = EV_ABS;
-	ev[1].code = ABS_Y;
-	ev[1].value = 400;
-	ev[2].type = EV_KEY;
-	ev[2].code = BTN_LEFT;
-	ev[2].value = 1;
-	ev[3].type = EV_KEY;
-	ev[3].code = BTN_LEFT;
-	ev[3].value = 0;
-	ev[4].type = EV_SYN;
-	ev[4].code = SYN_REPORT;
+	ev[1].code = ABS_MT_POSITION_Y;
+	ev[1].value = 512;
+	ev[2].type = EV_ABS;
+	ev[2].code = ABS_MT_PRESSURE;
+	ev[2].value = 53;
+	ev[3].type = EV_ABS;
+	ev[3].code = ABS_MT_TOUCH_MAJOR;
+	ev[3].value = 4;
+	ev[4].type = EV_ABS;
+	ev[4].code = ABS_MT_TRACKING_ID;
 	ev[4].value = 0;
+	ev[5].type = EV_SYN;
+	ev[5].code = SYN_MT_REPORT;
+	ev[5].value = 0;
+	ev[6].type = EV_SYN;
+	ev[6].code = SYN_REPORT;
+	ev[6].value = 0;
 
-	//ev[0].type = EV_REL;
-	//ev[0].code = REL_X;
-	//ev[0].value = -1000;
-	//ev[1].type = EV_REL;
-	//ev[1].code = REL_Y;
-	//ev[1].value = -1000;
-	//ev[2].type = EV_KEY;
-	//ev[2].code = KEY_LEFT;
-	//ev[2].value = 0;
-	//ev[3].type = EV_SYN;
-	//ev[3].code = SYN_REPORT;
-	//ev[3].value = 0;
-	
 
-	for(i=0; i<5; i++)
+	for(i=0; i<7; i++)
 	{
 		ret = write(fd, &ev[i], sizeof(struct input_event));
 		printf("%d\n", ret);
 	}
 
-	sleep(1);
+	sleep(10);
 
 	// destroying an input device
 	ret = ioctl(fd, UI_DEV_DESTROY);
