@@ -3,6 +3,7 @@
 
 import wx
 import os
+import socket
 
 class MyFrame(wx.Frame):
 
