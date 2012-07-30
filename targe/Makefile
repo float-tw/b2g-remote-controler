@@ -13,6 +13,11 @@ install: main
 reader: reader.c
 	$(TOOLCHAIN) -static -o reader reader.c
 
+writer: writer.c
+	$(TOOLCHAIN) -static -o writer writer.c
+
 install-reader: reader
 	adb push reader /data/
 
+install-writer: writer
+	adb push writer /data/

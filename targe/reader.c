@@ -14,7 +14,7 @@ int main()
 	fd = open("/dev/input/event0", O_RDONLY);
 	if( fd  < 0 )
 	{
-		printf("\n");
+		printf("error\n");
 		return 1;
 	}
 
