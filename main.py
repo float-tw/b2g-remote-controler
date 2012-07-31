@@ -86,7 +86,6 @@ class MyFrame(wx.Frame):
 			self.touch_stage = True
 			self.send_touch_event( event.GetPosition() )
 		elif event_type == wx.wxEVT_LEFT_UP:
-			print "up"
 			self.touch_stage_text.SetForegroundColour('red')
 			self.touch_stage = False
 			self.sock.send("\n")
