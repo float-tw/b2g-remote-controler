@@ -121,7 +121,7 @@ int main()
 				break;
 			printf("%d %d\n", x, y);
 			ev[0].value = x*1024/480;
-			ev[1].value = y*1024/800;
+			ev[1].value = y*941/800;
 			send_event(fd, ev, 7);
 		}
 	}
