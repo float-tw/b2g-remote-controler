@@ -99,8 +99,10 @@ class MyFrame(wx.Frame):
 
 	def get_screenshot(self, event=0):
 		print "get_screenshot"
-		os.system("adb pull /dev/graphics/fb0 screenshotdata/fb0")
-		os.system("dd bs=1920 count=800 if=screenshotdata/fb0 of=screenshotdata/fb0b")
+		# os.system("adb pull /dev/graphics/fb0 screenshotdata/fb0")
+		# os.system("dd bs=1920 count=800 if=screenshotdata/fb0 of=screenshotdata/fb0b")
+		os.system("adb shell dd bs=1920 count=800 if=/dev/graphics/fb0 of=/data/fb0b")
+		os.system("adb pull /data/fb0b screenshotdata/fb0b")
 		os.system("ffmpeg -vframes 1 -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 480x800 -i screenshotdata/fb0b -f image2 -vcodec png screenshot.png")
 		self.screenshot = wx.Image("screenshot.png", wx.BITMAP_TYPE_ANY)
 		self.screenshot = self.screenshot.Scale(240, 400, wx.IMAGE_QUALITY_HIGH)
