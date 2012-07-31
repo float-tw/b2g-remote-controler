@@ -1,12 +1,13 @@
-CC=$(HOME)/arm-toolchain/bin/arm-none-linux-gnueabi-gcc
+CROSS?=$(HOME)/arm-toolchain/bin/arm-none-linux-gnueabi-gcc
 CFLAG=-static
 
+all: remote_server event_reader
+
 remote_server: remote_server.c
-	$(CC) $(CFLAG) -o $@ $<
+	$(CROSS) $(CFLAG) -o $@ $<
 
 event_reader: event_reader.c
-	$(CC) $(CFLAG) -o $@ $<
-
+	$(CROSS) $(CFLAG) -o $@ $<
 
 install: install-remote-server install-event-reader
 
@@ -15,3 +16,6 @@ install-remote-server: remote_server
 
 install-event-reader: event_reader
 	adb push $< /data/
+
+clean:
+	rm remote_server event_reader
