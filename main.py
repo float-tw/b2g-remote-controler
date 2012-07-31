@@ -9,14 +9,17 @@ class MyFrame(wx.Frame):
 
 	def __init__(self):
 		wx.Frame.__init__(self, None, -1, "My Frame", size=(300, 500))
+		port = 2222
 		panel = wx.Panel(self, -1)
 		panel.Bind(wx.EVT_MOTION,  self.leave_pic)
+		self.Bind(wx.EVT_CLOSE, self.OnClose)
 		self.posText = wx.StaticText(panel, -1, "Pos:", pos=(10, 12))
 		self.posCtrl = wx.TextCtrl(panel, -1, "", pos=(40, 10))
-		self.touch_stage = wx.StaticText(panel, -1, "●", pos=(0, 12))
-		self.touch_stage.SetForegroundColour('red')
+		self.touch_stage_text = wx.StaticText(panel, -1, "●", pos=(0, 12))
+		self.touch_stage_text.SetForegroundColour('red')
+		self.touch_stage = False
 		self.screenshot_button = wx.Button(panel, -1, "Get Screenshot")
-		self.img = wx.StaticBitmap(panel, -1)#, self.screenshot)
+		self.img = wx.StaticBitmap(panel, -1)
 		
 		self.get_screenshot()
 
@@ -29,7 +32,7 @@ class MyFrame(wx.Frame):
 		self.vbox = wx.BoxSizer(wx.VERTICAL)
 		self.hbox = wx.BoxSizer(wx.HORIZONTAL)
 
-		self.hbox.Add(self.touch_stage, border=5, flag = wx.ALIGN_CENTER_VERTICAL)
+		self.hbox.Add(self.touch_stage_text, border=5, flag = wx.ALIGN_CENTER_VERTICAL)
 		self.hbox.Add(self.posText, border=5, flag = wx.ALIGN_CENTER_VERTICAL)
 		self.hbox.Add(self.posCtrl, border=5, flag = wx.ALIGN_CENTER_VERTICAL)
 		self.hbox.Add(self.screenshot_button, border=5, flag = wx.ALIGN_CENTER_VERTICAL)
@@ -40,11 +43,37 @@ class MyFrame(wx.Frame):
 
 		panel.SetSizer(self.vbox)
 
+		# run target progarm
+		# os.system("adb shell /data/writer &");
+		os.system("adb forward tcp:{0} tcp:{0}".format(port))
+
+		# connect
+		self.sock = socket.socket()
+		try:
+			self.sock.connect(("localhost", port))
+		except socket.error, msg:
+			print msg
+			dlg = wx.MessageDialog(self,
+				msg,
+				"Error", wx.OK)
+			dlg.ShowModal()
+			dlg.Destroy()
+
+	def OnClose(self, event):
+		try:
+			self.sock.send("-1 -1\n")
+			time.sleep(0.5)
+			self.sock.close()
+		except:
+			pass
+		self.Destroy()
+
+
 	def OnMove(self, event):
 		pos = event.GetPosition()
 		self.posCtrl.SetValue("%s, %s" % (pos.x, pos.y))
-		if event.LeftIsDown():
-			self.touch_stage.SetForegroundColour('green')
+		if self.touch_stage:
+			self.send_touch_event(pos)
 
 	def load_screenshot(self, event):
 		self.screenshot = wx.Image("screenshot1.png", wx.BITMAP_TYPE_ANY).ConvertToBitmap()
@@ -52,15 +81,23 @@ class MyFrame(wx.Frame):
 	
 	def touch(self, event):
 		event_type = event.GetEventType()
-		#print event_type
 		if event_type == wx.wxEVT_LEFT_DOWN:
-			self.touch_stage.SetForegroundColour('green')
+			self.touch_stage_text.SetForegroundColour('green')
+			self.touch_stage = True
+			self.send_touch_event( event.GetPosition() )
 		elif event_type == wx.wxEVT_LEFT_UP:
-			self.touch_stage.SetForegroundColour('red')
+			print "up"
+			self.touch_stage_text.SetForegroundColour('red')
+			self.touch_stage = False
+			self.sock.send("\n")
+	
+	def send_touch_event(self, pos):
+		self.sock.send("{0} {1}\n".format(pos.x*2, pos.y*2))
 	
 	def leave_pic(self, event):
-		self.touch_stage.SetForegroundColour('red')
-	
+		self.touch_stage_text.SetForegroundColour('red')
+		self.touch_stage = False
+
 	def get_screenshot(self, event=0):
 		print "get_screenshot"
 		os.system("adb pull /dev/graphics/fb0 screenshotdata/fb0")

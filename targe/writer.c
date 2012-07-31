@@ -117,6 +117,8 @@ int main()
 			send_event(fd, &ev[5], 2);
 		else
 		{
+			if(x<0 && y<0)
+				break;
 			printf("%d %d\n", x, y);
 			ev[0].value = x*1024/480;
 			ev[1].value = y*1024/800;
