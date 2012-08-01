@@ -1,6 +1,13 @@
 B2G remote controler
 ====================
 
+requirement
+-----------
+
+* python 2.7
+
+* wxpython 2.8
+
 build
 -----
 
