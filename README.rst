@@ -7,6 +7,7 @@ requirement
 * python 2.7
 
 * wxpython 2.8
+  # sudo apt-get install python-wxgtk2.8
 
 build
 -----
