@@ -14,7 +14,7 @@ build
 
 ::
 
-    $ cd targe
+    $ cd target
     $ export CROSS=your/arm-cross-compiler/path/cross-compiler-gcc
     $ make
     $ make install
