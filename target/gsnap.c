@@ -5,16 +5,9 @@
  *
  * Copyright (c) 2009-2011  Li XianJing <xianjimli@hotmail.com>
  *
- */
-
-/*
- * History:
- * ================================================================
- * 2009-08-20 Li XianJing <xianjimli@hotmail.com> created
- * 2011-02-28 Li XianJing <xianjimli@hotmail.com> suppport RGB888 framebuffer.
- * 2011-04-09 Li XianJing <xianjimli@hotmail.com> merge figofuture's png output.
- * 	ref: http://blog.chinaunix.net/space.php?uid=15059847&do=blog&cuid=2040565
- *
+ * Modifications by float chen <a13524000@gmail.com>
+ *  - remove PNG manipulation because PNG generation is known to be
+ *    slower than JPEG.
  */
 
 #include <fcntl.h>
@@ -228,7 +221,6 @@ int main(int argc, char* argv[])
 		printf("\nUsage: %s [jpeg file] [framebuffer dev]\n", argv[0]);
 		printf("Example: %s fb.jpg /dev/fb0\n", argv[0]);
 		printf("-----------------------------------------\n");
-		printf("Author: Li XianJing <xianjimli@hotmail.com>\n\n");
 
 		return 0;
 	}
@@ -242,7 +234,6 @@ int main(int argc, char* argv[])
 		snap2jpg(filename, 100, &fb);
 		fb_close(&fb);
 	}
-	printf("Author: Li XianJing <xianjimli@hotmail.com>\n\n");
 
 	return 0;
 }
