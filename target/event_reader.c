@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <linux/input.h>
 #include <fcntl.h>
 
 int main()
 {
 	int fd;
-	int ret;
-	int i;
 	struct input_event ev;
 
 	fd = open("/dev/input/event0", O_RDONLY);
