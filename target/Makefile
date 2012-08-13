@@ -1,5 +1,5 @@
 CROSS?=$(HOME)/arm-toolchain/bin/arm-none-linux-gnueabi-gcc
-CFLAG=-static
+CFLAG=-static -Wall
 
 all: remote_server event_reader
 
