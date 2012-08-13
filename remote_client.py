@@ -5,6 +5,8 @@ import wx
 import os
 import socket
 
+ss_scale = 0.5
+
 class MyFrame(wx.Frame):
 
 	def __init__(self):
@@ -42,6 +44,11 @@ class MyFrame(wx.Frame):
 		self.vbox.Add(self.img, flag = wx.ALIGN_CENTER_HORIZONTAL)
 
 		panel.SetSizer(self.vbox)
+
+		# update screenshot every 2 second
+		self.redraw_timer = wx.Timer(self)
+		self.Bind(wx.EVT_TIMER, self.get_screenshot, self.redraw_timer)		
+		self.redraw_timer.Start(2000)
 
 		# run target progarm
 		os.system("adb shell /data/remote_server &");
@@ -98,7 +105,10 @@ class MyFrame(wx.Frame):
 		os.system("adb shell /data/gsnap /data/screenshot.jpeg /dev/graphics/fb0")
 		os.system("adb pull /data/screenshot.jpeg")
 		self.screenshot = wx.Image("screenshot.jpeg", wx.BITMAP_TYPE_ANY)
-		self.screenshot = self.screenshot.Scale(240, 400, wx.IMAGE_QUALITY_HIGH)
+		self.screenshot = self.screenshot.Scale(
+				self.screenshot.GetWidth()*ss_scale,
+				self.screenshot.GetHeight()*ss_scale,
+				wx.IMAGE_QUALITY_HIGH)
 		self.screenshot = self.screenshot.ConvertToBitmap()
 		self.img.SetBitmap(self.screenshot)
 
