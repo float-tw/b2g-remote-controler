@@ -44,7 +44,7 @@ class MyFrame(wx.Frame):
 		panel.SetSizer(self.vbox)
 
 		# run target progarm
-		# os.system("adb shell /data/writer &");
+		os.system("adb shell /data/remote_server &");
 		os.system("adb forward tcp:{0} tcp:{0}".format(port))
 
 		# connect
@@ -75,10 +75,6 @@ class MyFrame(wx.Frame):
 		if self.touch_stage:
 			self.send_touch_event(pos)
 
-	def load_screenshot(self, event):
-		self.screenshot = wx.Image("screenshot1.png", wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-		wx.StaticBitmap(self, -1, self.screenshot, (10, 5), (self.screenshot.GetWidth(), self.screenshot.GetHeight()))
-	
 	def touch(self, event):
 		event_type = event.GetEventType()
 		if event_type == wx.wxEVT_LEFT_DOWN:
@@ -99,12 +95,9 @@ class MyFrame(wx.Frame):
 
 	def get_screenshot(self, event=0):
 		print "get_screenshot"
-		# os.system("adb pull /dev/graphics/fb0 screenshotdata/fb0")
-		# os.system("dd bs=1920 count=800 if=screenshotdata/fb0 of=screenshotdata/fb0b")
-		os.system("adb shell dd bs=1920 count=800 if=/dev/graphics/fb0 of=/data/fb0b")
-		os.system("adb pull /data/fb0b screenshotdata/fb0b")
-		os.system("ffmpeg -vframes 1 -vcodec rawvideo -f rawvideo -pix_fmt rgb32 -s 480x800 -i screenshotdata/fb0b -f image2 -vcodec png screenshot.png")
-		self.screenshot = wx.Image("screenshot.png", wx.BITMAP_TYPE_ANY)
+		os.system("adb shell /data/gsnap /data/screenshot.jpeg /dev/graphics/fb0")
+		os.system("adb pull /data/screenshot.jpeg")
+		self.screenshot = wx.Image("screenshot.jpeg", wx.BITMAP_TYPE_ANY)
 		self.screenshot = self.screenshot.Scale(240, 400, wx.IMAGE_QUALITY_HIGH)
 		self.screenshot = self.screenshot.ConvertToBitmap()
 		self.img.SetBitmap(self.screenshot)

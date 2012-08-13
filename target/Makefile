@@ -4,10 +4,10 @@ CFLAG=-static
 all: remote_server event_reader
 
 remote_server: remote_server.c
-	$(CROSS) $(CFLAG) -o $@ $<
+	$(CROSS) $(CFLAG) $< -o $@
 
 event_reader: event_reader.c
-	$(CROSS) $(CFLAG) -o $@ $<
+	$(CROSS) $(CFLAG) $< -o $@
 
 install: install-remote-server install-event-reader
 
@@ -18,4 +18,4 @@ install-event-reader: event_reader
 	adb push $< /data/
 
 clean:
-	rm remote_server event_reader
+	rm remote_server event_reader gsnap
