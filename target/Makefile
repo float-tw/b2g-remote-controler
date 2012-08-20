@@ -1,5 +1,5 @@
 CROSS?=$(HOME)/arm-toolchain/bin/arm-none-linux-gnueabi-gcc
-CFLAG=-static
+CFLAG=-static -Wall
 
 all: remote_server event_reader
 
@@ -18,4 +18,4 @@ install-event-reader: event_reader
 	adb push $< /data/
 
 clean:
-	rm remote_server event_reader gsnap
+	rm -f remote_server event_reader gsnap

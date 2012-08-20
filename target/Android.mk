@@ -4,14 +4,12 @@ include $(CLEAR_VARS)
 LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
-				   gsnap.c
+	gsnap.c
 
 LOCAL_C_INCLUDES += \
-					external/jpeg \
-					external/libpng \
-					external/zlib
-LOCAL_STATIC_LIBRARIES:= libpng
-LOCAL_SHARED_LIBRARIES:= libz libjpeg
+	external/jpeg
+
+LOCAL_SHARED_LIBRARIES:= libjpeg
 
 LOCAL_MODULE:= gsnap
 LOCAL_MODULE_TAGS := optional
