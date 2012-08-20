@@ -7,12 +7,12 @@ import time
 import socket
 
 ss_scale = 0.5
+port = 2222
 
 class MyFrame(wx.Frame):
 
 	def __init__(self):
 		wx.Frame.__init__(self, None, -1, "My Frame", size=(300, 500))
-		port = 2222
 		panel = wx.Panel(self, -1)
 		panel.Bind(wx.EVT_MOTION,  self.leave_pic)
 		self.Bind(wx.EVT_CLOSE, self.OnClose)
@@ -52,9 +52,6 @@ class MyFrame(wx.Frame):
 		self.Bind(wx.EVT_TIMER, self.get_screenshot, self.redraw_timer)		
 		self.redraw_timer.Start(2000)
 
-		# run target progarm
-		os.system("adb shell /data/remote_server &");
-		os.system("adb forward tcp:{0} tcp:{0}".format(port))
 
 		# connect
 		self.sock = socket.socket()
@@ -115,6 +112,11 @@ class MyFrame(wx.Frame):
 		self.img.SetBitmap(self.screenshot)
 
 if __name__ == '__main__':
+
+	# run target progarm
+	os.system("adb shell /data/remote_server &");
+	os.system("adb forward tcp:{0} tcp:{0}".format(port))
+
 	app = wx.PySimpleApp()
 	frame = MyFrame()
 	frame.Show(True)

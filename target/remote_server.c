@@ -30,7 +30,7 @@ int main()
 	struct sockaddr_in my_addr;
 	struct sockaddr_in their_addr;
 	int sin_size;
-	int ret;
+	int ret, on;
 	int x, y;
 	int in_buff_len, read_len;
 	char buff[128];
@@ -47,6 +47,9 @@ int main()
 	my_addr.sin_port = htons(PORT);
 	my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	bzero( &(my_addr.sin_zero), 8 );
+
+	on = 1;
+	setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
 	// Binding
 	if ( bind(socket_fd, (struct sockaddr*)&my_addr, sizeof(struct sockaddr)) == -1 ){
@@ -127,6 +130,7 @@ int main()
 	}
 
 	close(fd);
+	close(accept_fd);
 	close(socket_fd);
 
 	return 0;
