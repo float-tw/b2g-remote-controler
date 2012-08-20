@@ -3,6 +3,7 @@
 
 import wx
 import os
+import time
 import socket
 
 ss_scale = 0.5
@@ -24,6 +25,7 @@ class MyFrame(wx.Frame):
 		self.img = wx.StaticBitmap(panel, -1)
 		
 		self.get_screenshot()
+		self.SetSize((self.screenshot.GetWidth() + 50, self.screenshot.GetHeight() + 80))
 
 		self.img.Bind(wx.EVT_MOTION, self.OnMove)
 		self.img.Bind(wx.EVT_LEFT_DOWN, self.touch)
@@ -102,7 +104,7 @@ class MyFrame(wx.Frame):
 
 	def get_screenshot(self, event=0):
 		print "get_screenshot"
-		os.system("adb shell /data/gsnap /data/screenshot.jpeg /dev/graphics/fb0")
+		os.system("adb shell /data/gsnap /data/screenshot.jpeg /dev/graphics/fb0 > /dev/null")
 		os.system("adb pull /data/screenshot.jpeg")
 		self.screenshot = wx.Image("screenshot.jpeg", wx.BITMAP_TYPE_ANY)
 		self.screenshot = self.screenshot.Scale(
