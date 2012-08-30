@@ -30,7 +30,7 @@ int main()
 	struct sockaddr_in my_addr;
 	struct sockaddr_in their_addr;
 	int sin_size;
-	int ret, on;
+	int on;
 	int x, y;
 	int in_buff_len, read_len;
 	char buff[128];
@@ -65,7 +65,7 @@ int main()
 
 	// Accept
 	sin_size = sizeof(struct sockaddr_in);
-	if ( (accept_fd = accept(socket_fd, (struct sockaddr*)&their_addr, &sin_size)) == -1 ){
+	if ( (accept_fd = accept(socket_fd, (struct sockaddr*)&their_addr, (socklen_t*)&sin_size)) == -1 ){
 		perror("accept");
 		exit(1);
 	}

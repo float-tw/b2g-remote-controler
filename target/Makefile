@@ -1,4 +1,4 @@
-CROSS?=$(HOME)/arm-toolchain/bin/arm-none-linux-gnueabi-gcc
+CROSS?=$(HOME)/arm-toolchain/arm-none-linux/bin/arm-none-linux-gnueabi-gcc
 CFLAG=-static -Wall
 
 all: remote_server event_reader
@@ -8,6 +8,9 @@ remote_server: remote_server.c
 
 event_reader: event_reader.c
 	$(CROSS) $(CFLAG) $< -o $@
+
+uinputLib.o: uinputLib.c
+	$(CROSS) $(CFLAG) -c $< -o $@
 
 install: install-remote-server install-event-reader
 

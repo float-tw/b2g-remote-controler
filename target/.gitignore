@@ -1,2 +1,3 @@
 remote_server
 event_reader
+*.o
