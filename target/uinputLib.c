@@ -7,6 +7,8 @@
 #include <fcntl.h>
 #include <time.h>
 
+#include "uinputLib.h"
+
 void touch(int fd, int x, int y)
 {
 	// touch on one point
@@ -66,6 +68,7 @@ int init_uinput()
 	// init and creat uinput device
 	int fd;
 	struct uinput_user_dev uidev;
+	printf("init uinput");
 
 	fd = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
 	if( fd  < 0 )
@@ -90,9 +93,9 @@ int init_uinput()
 	uidev.id.product = 0;
 	uidev.id.version = 0;
 	uidev.absmin[ABS_MT_POSITION_X] = 0;
-	uidev.absmax[ABS_MT_POSITION_X] = 1024;
+	uidev.absmax[ABS_MT_POSITION_X] = MAX_X;
 	uidev.absmin[ABS_MT_POSITION_Y] = 0;
-	uidev.absmax[ABS_MT_POSITION_Y] = 1024;
+	uidev.absmax[ABS_MT_POSITION_Y] = MAX_Y;
 	uidev.absflat[ABS_MT_POSITION_X] = 0;
 	uidev.absflat[ABS_MT_POSITION_Y] = 0;
 	uidev.absfuzz[ABS_MT_POSITION_X] = 0;
@@ -109,6 +112,7 @@ int init_uinput()
 void close_uinput(int fd)
 {
 	ioctl(fd, UI_DEV_DESTROY);
+	close(fd);
 	return;
 }
 
